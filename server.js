@@ -2,6 +2,8 @@ const express        = require('express');
 const MongoClient    = require('mongodb').MongoClient;
 const bodyParser     = require('body-parser');
 
+
+
 const app            = express();
 
 const port = 8000;
@@ -14,8 +16,9 @@ client.on("connect", function() {
 	  console.log("You are now connected");
 });
 
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json());
-
+app.use(express.json());
+app.use(express.urlencoded({
+  extended: true
+}));
 
 require('./app/lnp')(app, client);app.listen(port, () => {  console.log('We are live on ' + port);});
