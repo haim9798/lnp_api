@@ -17,6 +17,7 @@ for (var Interfaces in networkInterfaces ) {
 	else {
 		serverAddress = networkInterfaces[Interfaces][0].address;
 		console.log('found the address : ' + serverAddress + ' in ' + Interfaces );
+		break;
 	}
 }
 
