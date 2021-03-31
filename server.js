@@ -1,21 +1,23 @@
+//require all needed libraries and extentions 
 const express        = require('express');
 var sip = require('sip');
 var util = require('util');
-
+var os = require( 'os' );
+const redis     = require('redis');
 const app            = express();
-
 const port = 8000;
 
-var serverAddress = "192.168.1.114";
+// find local host IP and write it to console 
+var networkInterfaces = os.networkInterfaces();
+console.log('Local IP is : ' + networkInterfaces['eth0'][0].address);
+var serverAddress = networkInterfaces['eth0'][0].address;
 
-
-const redis     = require('redis');
+//connect to local redisDB 
 var client    = redis.createClient();
-
 client.on("connect", function() {
 	  console.log("You are now connected to Redis DB");
 });
-
+//Start the API app 
 app.use(express.json());
 app.use(express.urlencoded({
   extended: true

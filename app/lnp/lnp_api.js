@@ -3,7 +3,7 @@ module.exports = function(app, client) {
 	// If number exist it will update it to new value
 	app.post('/lnp', (req, res) => {
 	const lnp = { number: req.body.number, transnum: req.body.transnum };
-	console.log(req.body);
+	console.log(req.body.number);
 	console.log("This is the original numnber:  " +lnp["number"]+"\n");
 	client.set (lnp["number"],lnp["transnum"], function(err, reply) {
 
@@ -20,11 +20,11 @@ app.get('/lnp/:number', (req, res) => {
 	
 	client.get(req.params.number, function(err, reply) {
 			 if (err) {
-				          res.send({ 'error': 'An error has occurred' }); 
+				          res.send({ 'error': err }); 
 						}
 			 else { 
 				 if (reply == null ) {
-						res.send( req.params.number);
+						res.send({ 'error': 'Cannot retrive this number from DB, please make sure to add ' + req.params.number + ' to the DB and try again'  });
 				 }
 				else { res.send(reply); 
 				}
