@@ -16,7 +16,7 @@ This will add or update a number in the DB.
 
 Curl example :
 
-curl --header "Content-Type: application/json"   --request POST   --data '{"number":"0549709207","transnum":"+972549709206"}'   http://localhost:8000/lnp
+curl --header "Content-Type: application/json"   --request POST   --data '{"number":"1234","transnum":"12345"}'   http://localhost:8000/lnp
 
 2. **GET** to http://<Your_IP>:8000/lnp/<number_to_be_translted>
 
