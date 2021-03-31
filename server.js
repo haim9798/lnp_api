@@ -7,10 +7,20 @@ const redis     = require('redis');
 const app            = express();
 const port = 8000;
 
-// find local host IP and write it to console 
+// find local host IP from first real interface  
 var networkInterfaces = os.networkInterfaces();
-console.log('Local IP is : ' + networkInterfaces['eth0'][0].address);
-var serverAddress = networkInterfaces['eth0'][0].address;
+var serverAddress ='';
+for (var Interfaces in networkInterfaces ) {
+	if ( ( networkInterfaces[Interfaces][0].address == '127.0.0.1' ) ){
+		continue;
+	}
+	else {
+		serverAddress = networkInterfaces[Interfaces][0].address;
+		console.log('found the address : ' + serverAddress + ' in ' + Interfaces );
+	}
+}
+
+
 
 //connect to local redisDB 
 var client    = redis.createClient();
