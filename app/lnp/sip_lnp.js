@@ -1,4 +1,5 @@
-module.exports = function(sip, client , util) {
+module.exports = function(sip, client , util,serverAddress,sipPort) {
+console.log('Starting SIP LNP server in ' + serverAddress + ':' + sipPort );
 sip.start({
 	port : sipPort,
 	address: serverAddress,
