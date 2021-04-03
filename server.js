@@ -6,6 +6,7 @@ var os = require( 'os' );
 const redis     = require('redis');
 const app            = express();
 const port = 8000;
+const sipPort = "5060";
 
 // find local host IP from first real interface  
 var networkInterfaces = os.networkInterfaces();
@@ -34,11 +35,15 @@ app.use(express.urlencoded({
   extended: true
 }));
 
-require('./app/lnp')(app, client);app.listen(port, () => {  console.log('We are live on ' + port);});
+const lnpModule =require('./app/lnp');
+const api4LNP = lnpModule.api(app, client);
+
+app.listen(port, () => {  console.log('API is live on port ' + port);});
 
 //start of SIP LNP server 
-
+console.log('Starting SIP LNP server in ' + serverAddress + ':' + sipPort );
 sip.start({
+	port : sipPort,
 	address: serverAddress,
 	logger: {
 	  send: function(message, address) { debugger; util.debug("send\n" + util.inspect(message, false, null)); },
