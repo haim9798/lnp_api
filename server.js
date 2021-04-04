@@ -32,8 +32,8 @@ const logger = createLogger({
 	  // - Write to all logs with level `info` and below to `Gnereal.log` 
 	  // - Write all logs error (and below) to `Error.log`.
 	  //
-	  new transports.File({ filename: 'SIP_LNP_Error_' + currentDate +'.log', level: 'error' }),
-	  new transports.File({ filename: 'SIP_LNP_General_'+ currentDate +'.log' })
+	  new transports.File({ filename: '/var/tmp/SIP_LNP_Error_' + currentDate +'.log', level: 'error' }),
+	  new transports.File({ filename: '/var/tmp/SIP_LNP_General_'+ currentDate +'.log' })
 	]
   });
 
