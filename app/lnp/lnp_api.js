@@ -15,6 +15,21 @@ module.exports = function(app, client) {
 			 }
 	});
 } ); // end of post to /lnp  
+
+app.post('/lnp/:number', (req, res) => {
+	console.log(req.body.transnum);
+	console.log("This is the original numnber:  " +req.params.number+"\n");
+	client.set (req.params.number,req.body.transnum, function(err, reply) {
+
+		if (err) {
+			         res.send({ 'error': 'An error has occurred' }); 
+				 } 
+		else { 
+			res.send ('Number inserted to LNP DB');
+			 }
+	});
+} );
+
 //Start of get to /lnp/:number 
 app.get('/lnp/:number', (req, res) => {
 	
