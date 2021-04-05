@@ -74,11 +74,7 @@ app.delete('/lnp/:number', (req, res) => {
 						}
 			 else { 
 				 if (reply == 1 ) {
-<<<<<<< HEAD
-						res.send( {'success': 'Numebr ' + req.params.number + ' deleted successfully from LNP DB' });
-=======
 						res.send( {'success': 'Numebr ' + req.params.number + ' deleted successfully from LNP DB'});
->>>>>>> bf04ddea645b07df2e3bf6c80a682727cfe121a5
 				 }
 				else { 
 					res.send({ 'error': 'Cannot delete this number from DB, Check if ' + req.params.number + ' Exist in the system' }); 
