@@ -16,6 +16,7 @@ var currentDate = getToday('MMDDYYY');
 //start of winston logging for use in file 
 
 const { createLogger, format, transports } = require('winston');
+require('winston-daily-rotate-file');
 const { combine, timestamp, label, printf } = format;
 
 const myFormat = printf(({ level, message, timestamp }) => {
@@ -31,10 +32,19 @@ const logger = createLogger({
 	transports: [
 	  //
 	  // - Write to all logs with level `info` and below to `Gnereal.log` 
-	  // - Write all logs error (and below) to `Error.log`.
+	  // - Write all logs error (and below) to `Error.log` with date.
 	  //
-	  new transports.File({ filename: '/var/tmp/SIP_LNP_Error_' + currentDate +'.log', level: 'error' }),
-	  new transports.File({ filename: '/var/tmp/SIP_LNP_General_'+ currentDate +'.log' })
+	  new transports.DailyRotateFile({ filename: '/var/tmp/SIP_LNP_Error-%DATE%.log',
+	  	level: 'error',
+	  	datePattern: 'MMDDYYYY',
+	  	maxSize : '20m',
+	  	maxFiles : '14d'
+	  }),
+	  new transports.DailyRotateFile ( { filename: '/var/tmp/SIP_LNP_General-%DATE%.log' ,
+	  datePattern: 'MMDDYYYY',
+	  maxSize : '20m',
+	  maxFiles : '14d'
+	  })
 	]
   });
 
