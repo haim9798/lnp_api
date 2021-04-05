@@ -1,7 +1,7 @@
 {
   "name": "sip_lnp_server",
   "version": "1.2.0",
-  "description": basic sip lnp server with REST API to allow for DB handling",
+  "description": "basic sip lnp server with REST API to allow for DB handling",
   "main": "server.js",
   "scripts": {
     "dev": "node server.js",
