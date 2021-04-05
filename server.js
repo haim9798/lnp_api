@@ -5,6 +5,7 @@ var util = require('util');
 var os = require( 'os' );
 const redis     = require('redis');
 const app            = express();
+var cors = require('cors');
 
 const port = 8000;
 const sipPort = "5060";
@@ -63,6 +64,7 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: true
 }));
+app.use(cors());
 
 const lnpModule =require('./app/lnp');
 const api4LNP = lnpModule.api(app, client,logger);

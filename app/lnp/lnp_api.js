@@ -17,7 +17,7 @@ module.exports = function(app, client,logger = null ) {
 	//This will get post and update a number in the DB
 	// If number exist it will update it to new value
 	app.post('/lnp', (req, res) => {
-	const lnp = { number: req.body.number, transnum: req.body.transnum };
+	const lnp = { number: req.body.number, transnum: req.body.transnum };4
 	console.log(req.body.number);
 	logger.info("This is the original numnber:  " +lnp["number"]+"\n");
 	client.set (lnp["number"],lnp["transnum"], function(err, reply) {
@@ -26,7 +26,7 @@ module.exports = function(app, client,logger = null ) {
 			         res.send({ 'error': 'An error has occurred' }); 
 				 } 
 		else { 
-			res.send ('Number inserted to LNP DB');
+			res.send ({'success':'Number ' + lnp["number"] + ' inserted to LNP DB'});
 			 }
 	});
 } ); // end of post to /lnp  
@@ -40,7 +40,7 @@ app.post('/lnp/:number', (req, res) => {
 					 logger.error('A redis DB error has occured : ' + err );
 				 } 
 		else { 
-			res.send ('Number inserted to LNP DB');
+			res.send ({'success':'Number ' + lnp["number"] + ' inserted to LNP DB'});
 			 }
 	});
 } );
@@ -58,7 +58,7 @@ app.get('/lnp/:number', (req, res) => {
 						logger.error('Number retrival failed for number : ' + req.params.number);
 				 }
 				else { 
-					res.send(reply); 
+					res.send({'number':reply}); 
 				}
 			 }
 				});
@@ -74,7 +74,7 @@ app.delete('/lnp/:number', (req, res) => {
 						}
 			 else { 
 				 if (reply == 1 ) {
-						res.send( 'Numebr ' + req.params.number + ' deleted successfully from LNP DB');
+						res.send( {'success': 'Numebr ' + req.params.number + ' deleted successfully from LNP DB'});
 				 }
 				else { 
 					res.send({ 'error': 'Cannot delete this number from DB, Check if ' + req.params.number + ' Exist in the system' }); 
