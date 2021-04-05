@@ -21,8 +21,8 @@ sip.start({
 	port : sipPort,
 	address: serverAddress,
 	logger: {
-	  send: function(message, address) { debugger; util.debug("send\n" + util.inspect(message, false, null)); },
-	  recv: function(message, address) { debugger; util.debug("recv\n" + util.inspect(message, false, null)); }
+	  send: function(message, address) { debugger; const debuglog = util.debuglog('siplnp');debuglog("send\n" + util.inspect(message, false, null)); },
+	  recv: function(message, address) { debugger; const debuglog = util.debuglog('siplnp');debuglog("recv\n" + util.inspect(message, false, null)); }
 	}
   },
   function (rq) {
