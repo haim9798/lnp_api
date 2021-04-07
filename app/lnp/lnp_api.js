@@ -63,7 +63,36 @@ app.get('/lnp/:number', (req, res) => {
 			 }
 				});
 	});
-
+//get all the DB using this GET interface. To be used on small DBs only. 
+app.get('/lnp/', (req, res) => {
+	client.keys('*', function(err, keys) {
+		var async = require('async');
+			 if (err) {
+						  res.send({ 'error': err }); 
+						}
+			 else { 
+				 if (keys == [] ) {
+						res.send({ 'error': 'Cannot retrive this number from DB, please make sure to add ' + req.params.number + ' to the DB and try again'  });
+						logger.error('Number retrival failed for number : ' + req.params.number);
+				 }
+				else { 
+						async.map(keys, function(key, cb) {
+						   client.get(key, function (error, value) {
+								if (error) return cb(error);
+								var data = {};
+								data['orig']=key;
+								data['translated']=value;
+								cb(null, data);
+							}); 
+						}, function (error, results) {
+						   if (error) return console.log(error);
+						   console.log(results);
+						   res.json({data:results});
+						});
+				}
+			 }
+				});
+	});
 //Start of delete to /lnp/:number 
 
 app.delete('/lnp/:number', (req, res) => {
