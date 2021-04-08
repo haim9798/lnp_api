@@ -87,7 +87,7 @@ app.get('/lnp/', (req, res) => {
 						}, function (error, results) {
 						   if (error) return console.log(error);
 						   console.log(results);
-						   res.json({data:results});
+						   res.send(results);
 						});
 				}
 			 }
