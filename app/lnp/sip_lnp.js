@@ -22,7 +22,7 @@ sip.start({
 	address: serverAddress,
 	logger: {
 	  send: function(message, address) { debugger; const debuglog = util.debuglog('siplnp');debuglog("send\n" + util.inspect(message, false, null)); },
-	  recv: function(message, address) { debugger;  const debuglog = util.debuglog('siplnp');debuglog("recv\n" + util.inspect(message, false, null)); }
+	  recv: function(message, address) { debugger; const debuglog = util.debuglog('siplnp');debuglog("recv\n" + util.inspect(message, false, null)); }
 	}
   },
   function (rq) {
