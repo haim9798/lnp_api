@@ -6,9 +6,11 @@ var os = require( 'os' );
 const redis     = require('redis');
 const app            = express();
 var cors = require('cors');
+var dns = require('native-dns');
 
 const port = 8000;
 const sipPort = "5060";
+const enumPort = 53;
 //find date for logfile name 
 
 var currentDate = getToday('MMDDYYY');
@@ -77,12 +79,17 @@ app.use(express.urlencoded({
 app.use(cors());
 
 const lnpModule =require('./app/lnp');
+const { Long } = require('bson');
 const api4LNP = lnpModule.api(app, client,logger);
 
 app.listen(port, () => {  logger.info('API is live on port ' + port);});
 
 //start of SIP LNP server 
 const sipLnpServer = lnpModule.sipserver(sip,client,util,serverAddress,sipPort, logger);
+// start of ENUM server 
+const enumLnpServer = lnpModule.enmuserver(client, dns, serverAddress , enumPort,logger); 
+
+// Service Functions start here 
 
 function getToday(dateFormat){
     var today = new Date();

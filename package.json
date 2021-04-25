@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node server.js",
     "test": "node server.js",
-    "lnp" : "node siplnp.js"
+    "lnp": "node siplnp.js"
   },
   "keywords": [
     "api",
@@ -20,6 +20,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongodb": "^3.6.6",
+    "native-dns": "^0.7.0",
     "redis": "^3.1.1",
     "sip": "0.0.6",
     "util": "^0.12.3",
