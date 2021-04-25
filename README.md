@@ -1,7 +1,22 @@
-# lnp_api
-This server will return 302 with the LNP number on an INVITE sent. 
+# lnp_server
 
-SIP server is created based on code by Alex Nisanov using NodeJS. 
+*New in Version 2 :*
+
+    - Added ENUM DNS service on port 53. 
+    - Changed main js file name to lnpserver.js
+    - added npm package "native-dns"
+
+While upgrdaing from v1 please run npm install as new nopm packages were added. 
+
+This server will answer LNP queries using SIP LNP and ENUM DNS. 
+
+SIP Invites for LNP should be sent to port 5060 and ENUM DNS should be sent to port 53. 
+
+Ports can be changed in lnpserver.js file. 
+
+SIP server is created based on code by Alex Nisanov using NodeJS.
+
+DNS ENUM server is created based on native-dns package from https://github.com/tjfontaine/node-dns
 
 In order to load numbers to the LNP DB you need to use the REST API integrated in this LNP server. 
 
