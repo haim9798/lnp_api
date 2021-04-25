@@ -21,33 +21,31 @@ module.exports = function(client, dns, serverAddress , enumPort = 53,logger = nu
     server = dns.createServer();
     
     var onMessage = function (request, response) {
-      console.log('request from:', request.address , ' request Type :' , request.question[0].type);
+      logger.info('ENUM Service - Request from: ' + request.address.address);
       var i;
       if (request.question[0].type == 35 ){
-        
-    
-        console.log("naptr recieved");
         // Extract the number from NAPTR message 
         var num = request.question[0].name.split(".");
         num.reverse();
         num.splice(0,2);
         var phone = num.join("");
-        console.log(' the number in the query is : %s', phone); 
+        logger.info('ENUM Service -The number in the query is : ' + phone); 
          
         //Query DB and get translated number 
         client.get(phone, (err, LRN) => {
             if (err || LRN == null) {
                 response.header.rcode = consts.NAME_TO_RCODE.SERVFAIL;
                 response.send();
+                logger.error('ENUM Service - Error encountered in Redis DB query');
             }
             else {
                 var answer_exp = '!^.*$!sip:+' + phone + ';npdi;rn=+' + LRN + '@'+ serverAddress + ';user=phone!' ;
-                console.log("Found ENUM response in DB : ",LRN);
+                logger.info('ENUM Service - Found ENUM response in DB : '+ LRN);
                 response.answer.push(dns.NAPTR({
                     name: request.question[0].name,
                     order : 10, 
                     preference : 10 , 
-                    flags : 'u',
+                    flags : 'U',
                     service : 'E2U+pstn:SIP', 
                     regexp  : answer_exp ,
                     replacement : '',
@@ -65,20 +63,20 @@ module.exports = function(client, dns, serverAddress , enumPort = 53,logger = nu
   };
     
     var onError = function (err, buff, req, res) {
-      console.log(err.stack);
+      logger.error(err.stack);
     };
     
     var onListening = function () {
-      console.log('server listening on', this.address());
+      logger.info('LNP Server -ENUM DNS Service listening on port ' + enumPort );
       //this.close();
     };
     
     var onSocketError = function (err, socket) {
-      console.log(err);
+      logger.error(err);
     };
     
     var onClose = function () {
-      console.log('server closed', this.address());
+      logger.info('LNP Server -ENUM DNS Service closed');
     };
     
     server.on('request', onMessage);

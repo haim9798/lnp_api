@@ -18,15 +18,17 @@ module.exports = function(app, client,logger = null ) {
 	// If number exist it will update it to new value
 	app.post('/lnp', (req, res) => {
 	const lnp = { number: req.body.number, transnum: req.body.transnum };4
-	console.log(req.body.number);
-	logger.info("This is the original numnber:  " +lnp["number"]+"\n");
+	logger.info('LNP API Service - This is the original numnber:  ' +lnp["number"]+'\n');
 	client.set (lnp["number"],lnp["transnum"], function(err, reply) {
 
 		if (err) {
-			         res.send({ 'error': 'An error has occurred' }); 
+			         res.send({ 'error': 'An error has occurred' });
+					 logger.error('LNP API Service - Redis DB error has occured : ' + err );
 				 } 
 		else { 
 			res.send ({'success':'Number ' + lnp["number"] + ' inserted to LNP DB'});
+			logger.info('LNP API Service - Number ' + req.params.number + ' inserted to Redis DB' );
+
 			 }
 	});
 } ); // end of post to /lnp  
@@ -37,17 +39,18 @@ app.post('/lnp/:number', (req, res) => {
 
 		if (err) {
 			         res.send({ 'error': 'An error has occurred' }); 
-					 logger.error('A redis DB error has occured : ' + err );
+					 logger.error('LNP API Service - Redis DB error has occured : ' + err );
 				 } 
 		else { 
 			res.send ({'success':'Number ' + lnp["number"] + ' inserted to LNP DB'});
+			logger.info('LNP API Service - Number ' + req.params.number + ' inserted to Redis DB');
 			 }
 	});
 } );
 
 //Start of get to /lnp/:number 
 app.get('/lnp/:number', (req, res) => {
-	logger.info('Original number is : ' + req.params.number);
+	logger.info('LNP API Service - Original number is : ' + req.params.number);
 	client.get(req.params.number, function(err, reply) {
 			 if (err) {
 				          res.send({ 'error': err }); 
@@ -55,7 +58,7 @@ app.get('/lnp/:number', (req, res) => {
 			 else { 
 				 if (reply == null ) {
 						res.send({ 'error': 'Cannot retrive this number from DB, please make sure to add ' + req.params.number + ' to the DB and try again'  });
-						logger.error('Number retrival failed for number : ' + req.params.number);
+						logger.error('LNP API Service - Number retrival failed for number : ' + req.params.number);
 				 }
 				else { 
 					res.send({'number':reply}); 
@@ -73,7 +76,7 @@ app.get('/lnp/', (req, res) => {
 			 else { 
 				 if (keys == [] ) {
 						res.send({ 'error': 'Cannot retrive this number from DB, please make sure to add ' + req.params.number + ' to the DB and try again'  });
-						logger.error('Number retrival failed for number : ' + req.params.number);
+						logger.error('LNP API Service - Number retrival failed for number : ' + req.params.number);
 				 }
 				else { 
 						async.map(keys, function(key, cb) {
@@ -99,17 +102,19 @@ app.delete('/lnp/:number', (req, res) => {
 	
 	client.del(req.params.number, function(err, reply) {
 			 if (err) {
-				          res.send({ 'error': 'An error has occurred' }); 
+				          res.send({ 'error': 'An error has occurred' });
+						  logger.error('LNP API Service - Number Delete failed for number : ' + req.params.number);
 						}
 			 else { 
 				 if (reply == 1 ) {
 						res.send( {'success': 'Numebr ' + req.params.number + ' deleted successfully from LNP DB'});
+						logger.info('LNP API Service - Number ' + req.params.number + ' deleted successfully from Redis DB' );
 				 }
 				else { 
-					res.send({ 'error': 'Cannot delete this number from DB, Check if ' + req.params.number + ' Exist in the system' }); 
+					res.send({ 'error': 'Cannot delete this number from DB, Check if ' + req.params.number + ' Exist in the system' });
+					logger.error('LNP API Service - Cannot delete this number from Redis DB, Check if ' + req.params.number + ' Exist in the system');
 				}
 
-				console.log(reply);
 			 }
 				});
 	});
