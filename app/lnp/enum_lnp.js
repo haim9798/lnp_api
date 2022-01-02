@@ -1,4 +1,4 @@
-module.exports = function(client, dns, serverAddress , enumPort = 53,logger = null  ) {
+module.exports = function(slaveClient, dns, serverAddress , enumPort = 53,logger = null  ) {
 	//If no logger is sent to the function , just use a default logger that sends everything to //null/dev	
 	if (logger == null){
 		const { createLogger, format, transports } = require('winston');
@@ -32,7 +32,7 @@ module.exports = function(client, dns, serverAddress , enumPort = 53,logger = nu
         logger.info('ENUM Service -The number in the query is : ' + phone); 
          
         //Query DB and get translated number 
-        client.get(phone, (err, LRN) => {
+        slaveClient.get(phone, (err, LRN) => {
             if (err || LRN == null) {
                 response.header.rcode = consts.NAME_TO_RCODE.SERVFAIL;
                 response.send();

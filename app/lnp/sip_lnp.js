@@ -1,4 +1,4 @@
-module.exports = function(sip, client , util,serverAddress,sipPort, logger= null) {
+module.exports = function(sip, slaveClient , util,serverAddress,sipPort, logger= null) {
 //If no logger is sent to the function , just use a default logger that sends everything to //null/dev	
 if (logger == null){
     const { createLogger, format, transports } = require('winston');
@@ -31,7 +31,7 @@ sip.start({
 				  sip.send(sip.makeResponse(rq, 100, 'Trying'));
 				  var pnumber = sip.parseUri(rq.uri).user; //extract phone number
 				  logger.info(pnumber);
-				  client.get(pnumber, (err, LRN) => {
+				  slaveClient.get(pnumber, (err, LRN) => {
 					  if (err || LRN == null) {
 						  sip.send(sip.makeResponse(rq, 404, 'Not Found'));
 						  logger.error('SIP LNP Service - Error encountered in Redis DB query');

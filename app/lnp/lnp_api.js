@@ -1,4 +1,4 @@
-module.exports = function(app, client,logger = null ) {
+module.exports = function(app, masterClient,slaveClient,logger = null ) {
 	//If no logger is sent to the function , just use a default logger that sends everything to //null/dev	
 	if (logger == null){
 		const { createLogger, format, transports } = require('winston');
@@ -19,7 +19,7 @@ module.exports = function(app, client,logger = null ) {
 	app.post('/lnp', (req, res) => {
 	const lnp = { number: req.body.number, transnum: req.body.transnum };4
 	logger.info('LNP API Service - This is the original numnber:  ' +lnp["number"]+'\n');
-	client.set (lnp["number"],lnp["transnum"], function(err, reply) {
+	masterClient.set (lnp["number"],lnp["transnum"], function(err, reply) {
 
 		if (err) {
 			         res.send({ 'error': 'An error has occurred' });
@@ -35,7 +35,7 @@ module.exports = function(app, client,logger = null ) {
 
 app.post('/lnp/:number', (req, res) => {
 	logger.info(req.body.transnum);
-	client.set (req.params.number,req.body.transnum, function(err, reply) {
+	masterClient.set (req.params.number,req.body.transnum, function(err, reply) {
 
 		if (err) {
 			         res.send({ 'error': 'An error has occurred' }); 
@@ -51,7 +51,7 @@ app.post('/lnp/:number', (req, res) => {
 //Start of get to /lnp/:number 
 app.get('/lnp/:number', (req, res) => {
 	logger.info('LNP API Service - Original number is : ' + req.params.number);
-	client.get(req.params.number, function(err, reply) {
+	slaveClient.get(req.params.number, function(err, reply) {
 			 if (err) {
 				          res.send({ 'error': err }); 
 						}
@@ -68,7 +68,7 @@ app.get('/lnp/:number', (req, res) => {
 	});
 //get all the DB using this GET interface. To be used on small DBs only. 
 app.get('/lnp/', (req, res) => {
-	client.keys('*', function(err, keys) {
+	slaveClient.keys('*', function(err, keys) {
 		var async = require('async');
 			 if (err) {
 						  res.send({ 'error': err }); 
@@ -100,7 +100,7 @@ app.get('/lnp/', (req, res) => {
 
 app.delete('/lnp/:number', (req, res) => {
 	
-	client.del(req.params.number, function(err, reply) {
+	masterClient.del(req.params.number, function(err, reply) {
 			 if (err) {
 				          res.send({ 'error': 'An error has occurred' });
 						  logger.error('LNP API Service - Number Delete failed for number : ' + req.params.number);

@@ -67,11 +67,17 @@ for (var Interfaces in networkInterfaces ) {
 
 
 //connect to local redisDB 
-var client    = redis.createClient({
+var masterClient  = redis.createClient({
     host : 'redis-master.default.svc.cluster.local'
 });
-client.on("connect", function() {
-	logger.info("You are now connected to Redis DB");
+masterClient.on("connect", function() {
+	logger.info("You are now connected to Redis Master DB Node");
+});
+var slaveClient = redis.createClient({
+    host : 'redis-replica.default.svc.cluster.local'
+});
+slaveClient.on("connect", function() {
+	logger.info("You are now connected to Redis Replica DB");
 });
 //Start the API app 
 app.use(express.json());
@@ -82,14 +88,14 @@ app.use(cors());
 
 const lnpModule =require('./app/lnp');
 const { Long } = require('bson');
-const api4LNP = lnpModule.api(app, client,logger);
+const api4LNP = lnpModule.api(app, masterClient, slaveClient, logger);
 
 app.listen(port, () => {  logger.info('API is live on port ' + port);});
 
 //start of SIP LNP server 
-const sipLnpServer = lnpModule.sipserver(sip,client,util,serverAddress,sipPort, logger);
+const sipLnpServer = lnpModule.sipserver(sip,masterClient,slaveClient,util,serverAddress,sipPort, logger);
 // start of ENUM server 
-const enumLnpServer = lnpModule.enmuserver(client, dns, serverAddress , enumPort,logger); 
+const enumLnpServer = lnpModule.enmuserver(masterClient, slaveClient, dns, serverAddress , enumPort,logger); 
 
 // Service Functions start here 
 
