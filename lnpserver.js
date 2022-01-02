@@ -93,9 +93,9 @@ const api4LNP = lnpModule.api(app, masterClient, slaveClient, logger);
 app.listen(port, () => {  logger.info('API is live on port ' + port);});
 
 //start of SIP LNP server 
-const sipLnpServer = lnpModule.sipserver(sip,masterClient,slaveClient,util,serverAddress,sipPort, logger);
+const sipLnpServer = lnpModule.sipserver(sip,slaveClient,util,serverAddress,sipPort, logger);
 // start of ENUM server 
-const enumLnpServer = lnpModule.enmuserver(masterClient, slaveClient, dns, serverAddress , enumPort,logger); 
+const enumLnpServer = lnpModule.enmuserver(slaveClient, dns, serverAddress , enumPort,logger); 
 
 // Service Functions start here 
 
