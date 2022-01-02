@@ -67,7 +67,9 @@ for (var Interfaces in networkInterfaces ) {
 
 
 //connect to local redisDB 
-var client    = redis.createClient();
+var client    = redis.createClient({
+    host : 'redis-master.default.svc.cluster.local'
+});
 client.on("connect", function() {
 	logger.info("You are now connected to Redis DB");
 });
