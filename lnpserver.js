@@ -68,13 +68,13 @@ for (var Interfaces in networkInterfaces ) {
 
 //connect to local redisDB 
 var masterClient  = redis.createClient({
-    host : 'redis-master.default.svc.cluster.local'
+    host : 'redis-master'
 });
 masterClient.on("connect", function() {
 	logger.info("You are now connected to Redis Master DB Node");
 });
 var slaveClient = redis.createClient({
-    host : 'redis-replica.default.svc.cluster.local'
+    host : 'redis-replica'
 });
 slaveClient.on("connect", function() {
 	logger.info("You are now connected to Redis Replica DB");
