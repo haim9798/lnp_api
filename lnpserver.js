@@ -8,7 +8,7 @@ const app            = express();
 var cors = require('cors');
 var dns = require('native-dns');
 
-const port = 8000;
+const port = 80;
 const sipPort = "5060";
 const enumPort = 53;
 //find date for logfile name 

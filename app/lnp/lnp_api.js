@@ -119,6 +119,12 @@ app.delete('/lnp/:number', (req, res) => {
 				});
 	});
 
+	//Start of get to /
+	// This will be used for health check from the server and the ingress or for manuall checks  
+app.get('/', (req, res) => {
+	logger.info('LNP health check accoured');
+	res.send('Helath Check successed - server is up and running');
+	});
 
 //end of listeners to API calls	
 }
