@@ -50,21 +50,28 @@ app.post('/lnp/:number', (req, res) => {
 
 //Start of get to /lnp/:number 
 app.get('/lnp/:number', (req, res) => {
-	logger.info('LNP API Service - Original number is : ' + req.params.number);
-	slaveClient.get(req.params.number, function(err, reply) {
-			 if (err) {
-				          res.send({ 'error': err }); 
+	// This will be used for health check from the server and the ingress or for manuall checks  
+	if(req.params.number == 'health') {
+		logger.info('LNP health check accoured');
+		res.send('Health Check successed - server is up and running');	
+	}
+	else {
+		logger.info('LNP API Service - Original number is : ' + req.params.number);
+		slaveClient.get(req.params.number, function(err, reply) {
+			 	if (err) {
+				 	         res.send({ 'error': err }); 
 						}
-			 else { 
-				 if (reply == null ) {
-						res.send({ 'error': 'Cannot retrive this number from DB, please make sure to add ' + req.params.number + ' to the DB and try again'  });
-						logger.error('LNP API Service - Number retrival failed for number : ' + req.params.number);
+				 else { 
+					 if (reply == null ) {
+							res.send({ 'error': 'Cannot retrive this number from DB, please make sure to add ' + req.params.number + ' to the DB and try again'  });
+							logger.error('LNP API Service - Number retrival failed for number : ' + req.params.number);
+				 		}	
+					else { 
+						res.send({'number':reply}); 
+						}
 				 }
-				else { 
-					res.send({'number':reply}); 
-				}
-			 }
 				});
+	}
 	});
 //get all the DB using this GET interface. To be used on small DBs only. 
 app.get('/lnp/', (req, res) => {
@@ -118,13 +125,5 @@ app.delete('/lnp/:number', (req, res) => {
 			 }
 				});
 	});
-
-	//Start of get to /lnp/health/
-	// This will be used for health check from the server and the ingress or for manuall checks  
-app.get('/lnp/health/', (req, res) => {
-	logger.info('LNP health check accoured');
-	res.send('Health Check successed - server is up and running');
-	});
-
 //end of listeners to API calls	
 }
