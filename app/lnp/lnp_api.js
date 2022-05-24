@@ -51,25 +51,20 @@ app.post('/lnp/:number', (req, res) => {
 //Start of get to /lnp/:number 
 app.get('/lnp/:number', (req, res) => {
 	// This will be used for health check from the server and the ingress or for manuall checks  
-	if( req.params.number == 'health' ) {
-		logger.info('LNP health check accoured');
-		res.send({'health': 'successfully'});	
-	}
-	else {
-		logger.info('LNP API Service - Original number is : ' + req.params.number);
-		slaveClient.get(req.params.number, function(err, reply) {
-			 	if (err) {
-				 	         res.send({ 'error': err }); 
-						}
-				 else { 
-					 if (reply == null ) {
-							res.send({ 'error': 'Cannot retrive this number from DB, please make sure to add ' + req.params.number + ' to the DB and try again'  });
-							logger.error('LNP API Service - Number retrival failed for number : ' + req.params.number);
-				 		}	
-					else { 
-						res.send({'number':reply}); 
-						}
-				 }
+	logger.info('LNP API Service - Original number is : ' + req.params.number);
+	slaveClient.get(req.params.number, function(err, reply) {
+		 	if (err) {
+			 	         res.send({ 'error': err });
+					}
+	  	    else { 
+				if (reply == null ) {
+						res.send({ 'error': 'Cannot retrive this number from DB, please make sure to add ' + req.params.number + ' to the DB and try again'  });
+						logger.error('LNP API Service - Number retrival failed for number : ' + req.params.number);
+				 	}	
+				else { 
+					res.send({'number':reply}); 
+					}
+				}
 				});
 	}
 	});
