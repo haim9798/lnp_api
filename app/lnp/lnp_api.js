@@ -51,9 +51,9 @@ app.post('/lnp/:number', (req, res) => {
 //Start of get to /lnp/:number 
 app.get('/lnp/:number', (req, res) => {
 	// This will be used for health check from the server and the ingress or for manuall checks  
-	if(req.params.number == 'health') {
+	if( req.params.number == 'health' ) {
 		logger.info('LNP health check accoured');
-		res.send('Health Check successed - server is up and running');	
+		res.send({'health': 'successfully'});	
 	}
 	else {
 		logger.info('LNP API Service - Original number is : ' + req.params.number);
