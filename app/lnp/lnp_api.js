@@ -66,7 +66,6 @@ app.get('/lnp/:number', (req, res) => {
 					}
 				}
 				});
-	}
 	});
 //get all the DB using this GET interface. To be used on small DBs only. 
 app.get('/lnp/', (req, res) => {
@@ -119,6 +118,12 @@ app.delete('/lnp/:number', (req, res) => {
 
 			 }
 				});
+				
 	});
+
+app.get('/', (req, res) => {
+    logger.info('LNP health check accoured');
+    res.send('Helath Check successed - server is up and running');
+        });	
 //end of listeners to API calls	
 }
