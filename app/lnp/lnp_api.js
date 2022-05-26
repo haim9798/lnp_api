@@ -71,7 +71,7 @@ app.get('/lnp/:number', (req, res) => {
 						}
 				 }
 				});
-	});
+	}});
 //get all the DB using this GET interface. To be used on small DBs only. 
 app.get('/lnp/', (req, res) => {
 	slaveClient.keys('*', function(err, keys) {
