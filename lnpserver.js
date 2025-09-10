@@ -6,9 +6,11 @@ var os = require( 'os' );
 const redis     = require('redis');
 const app            = express();
 var cors = require('cors');
+var dns = require('native-dns');
 
-const port = 8000;
+const port = 80;
 const sipPort = "5060";
+const enumPort = 53;
 //find date for logfile name 
 
 var currentDate = getToday('MMDDYYY');
@@ -65,9 +67,17 @@ for (var Interfaces in networkInterfaces ) {
 
 
 //connect to local redisDB 
-var client    = redis.createClient();
-client.on("connect", function() {
-	logger.info("You are now connected to Redis DB");
+var masterClient  = redis.createClient({
+    host : 'redis-master'
+});
+masterClient.on("connect", function() {
+	logger.info("You are now connected to Redis Master DB Node");
+});
+var slaveClient = redis.createClient({
+    host : 'redis-replica'
+});
+slaveClient.on("connect", function() {
+	logger.info("You are now connected to Redis Replica DB");
 });
 //Start the API app 
 app.use(express.json());
@@ -77,12 +87,17 @@ app.use(express.urlencoded({
 app.use(cors());
 
 const lnpModule =require('./app/lnp');
-const api4LNP = lnpModule.api(app, client,logger);
+const { Long } = require('bson');
+const api4LNP = lnpModule.api(app, masterClient, slaveClient, logger);
 
 app.listen(port, () => {  logger.info('API is live on port ' + port);});
 
 //start of SIP LNP server 
-const sipLnpServer = lnpModule.sipserver(sip,client,util,serverAddress,sipPort, logger);
+const sipLnpServer = lnpModule.sipserver(sip,slaveClient,util,serverAddress,sipPort, logger);
+// start of ENUM server 
+const enumLnpServer = lnpModule.enmuserver(slaveClient, dns, serverAddress , enumPort,logger); 
+
+// Service Functions start here 
 
 function getToday(dateFormat){
     var today = new Date();
