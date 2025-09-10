@@ -15,14 +15,14 @@ if (logger == null){
         });
 }
 
-logger.info('Starting SIP LNP server in ' + serverAddress + ':' + sipPort );
-console.log('SIP LNP server started');
+logger.info('LNP Server - Starting SIP LNP Service in ' + serverAddress + ':' + sipPort );
+console.log('LNP Server - SIP LNP Service started');
 sip.start({
 	port : sipPort,
 	address: serverAddress,
 	logger: {
-	  send: function(message, address) { debugger; util.debug("send\n" + util.inspect(message, false, null)); },
-	  recv: function(message, address) { debugger; util.debug("recv\n" + util.inspect(message, false, null)); }
+	  send: function(message, address) { debugger; const debuglog = util.debuglog('siplnp');debuglog("send\n" + util.inspect(message, false, null)); },
+	  recv: function(message, address) { debugger; const debuglog = util.debuglog('siplnp');debuglog("recv\n" + util.inspect(message, false, null)); }
 	}
   },
   function (rq) {
@@ -34,10 +34,11 @@ sip.start({
 				  client.get(pnumber, (err, LRN) => {
 					  if (err || LRN == null) {
 						  sip.send(sip.makeResponse(rq, 404, 'Not Found'));
+						  logger.error('SIP LNP Service - Error encountered in Redis DB query');
 					  }
 					  else {
 						  var response = sip.makeResponse(rq, 302, 'Moved Temporarily');
-						  logger.info("after 302",LRN);
+						  logger.info('SIP LNP Service - Found LRN in DB : '+ LRN);
 						  var uri = sip.parseUri(rq.uri);
 						  uri.user = pnumber + ";rn=" + LRN;
 						  response.headers.contact = [{uri: uri}];
