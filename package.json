@@ -1,6 +1,6 @@
 {
-  "name": "api_testing",
-  "version": "1.0.0",
+  "name": "sip_lnp_server",
+  "version": "1.1.0",
   "description": "test to create api using nodejs. to be used to connect to db and handle data",
   "main": "server.js",
   "scripts": {
@@ -17,7 +17,10 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "mongodb": "^3.6.5",
-    "redis": "^3.0.2"
+    "redis": "^3.0.2",
+    "sip": "0.0.6",
+    "util": "^0.12.3",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
